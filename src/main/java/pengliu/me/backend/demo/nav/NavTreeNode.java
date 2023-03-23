@@ -2,12 +2,24 @@ package pengliu.me.backend.demo.nav;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * CREATE TABLE `nav_node` (
+ *   `id` int NOT NULL AUTO_INCREMENT,
+ *   `title` varchar(45) DEFAULT NULL,
+ *   `is_root` tinyint(1) NOT NULL,
+ *   `parent_id` int DEFAULT NULL,
+ *   `target` text,
+ *   `depth` int NOT NULL,
+ *   PRIMARY KEY (`id`),
+ *   KEY `parent_id_idx` (`parent_id`),
+ *   CONSTRAINT `parent_id` FOREIGN KEY (`parent_id`) REFERENCES `nav_node` (`id`)
+ * ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ */
 @Entity
 @Table(name = "nav_node")
 public class NavTreeNode {
@@ -18,7 +30,7 @@ public class NavTreeNode {
     @Column(name = "is_root", nullable = false)
     private Boolean isRoot;
 
-    @JsonBackReference
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name="parent_id", nullable=true)
     private NavTreeNode parent;

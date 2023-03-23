@@ -31,12 +31,16 @@ public class NavTreeService {
     }
 
     public void createNavTreeNode(Integer parentId, NavTreeNode newNode) {
-        Optional<NavTreeNode> parent = navTreeRepository.findById(parentId);
-        Assert.isTrue(parent.isPresent(),
-                String.format("Fail to find parent node of newNode.\n" +
-                        "NewNode is: %s \n", newNode.toString()));
-        newNode.setParent(parent.get());
-        newNode.setDepth(parent.get().getDepth() + 1);
+        if (newNode.getRoot()) {
+            newNode.setDepth(0);
+        } else {
+            Optional<NavTreeNode> parent = navTreeRepository.findById(parentId);
+            Assert.isTrue(parent.isPresent(),
+                    String.format("Fail to find parent node of newNode.\n" +
+                            "NewNode is: %s \n", newNode.toString()));
+            newNode.setParent(parent.get());
+            newNode.setDepth(parent.get().getDepth() + 1);
+        }
         navTreeRepository.save(newNode);
     }
 
