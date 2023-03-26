@@ -6,8 +6,10 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class NavTreeService {
     @Autowired
     private NavTreeRepository navTreeRepository;
@@ -30,6 +32,7 @@ public class NavTreeService {
         return navTreeRepository.findAll();
     }
 
+    @Transactional(readOnly = false)
     public void createNavTreeNode(Integer parentId, NavTreeNode newNode) {
         if (newNode.getRoot()) {
             newNode.setDepth(0);
@@ -44,6 +47,7 @@ public class NavTreeService {
         navTreeRepository.save(newNode);
     }
 
+    @Transactional(readOnly = false)
     public void deleteNavTreeNode(Integer id) throws Exception {
         Optional<NavTreeNode> node = navTreeRepository.findById(id);
         Assert.isTrue(node.isPresent(), String.format("Fail to find node with id %s", id));
@@ -55,6 +59,7 @@ public class NavTreeService {
         navTreeRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = false)
     public void updateNavTreeNode(NavTreeNode nodeToUpdate) {
         Optional<NavTreeNode> node = navTreeRepository.findById(nodeToUpdate.getId());
         Assert.isTrue(node.isPresent(), String.format("Fail to find node with id %s", nodeToUpdate.getId()));
