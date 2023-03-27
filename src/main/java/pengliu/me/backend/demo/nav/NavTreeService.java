@@ -33,7 +33,7 @@ public class NavTreeService {
     }
 
     @Transactional(readOnly = false)
-    public void createNavTreeNode(Integer parentId, NavTreeNode newNode) {
+    public NavTreeNode createNavTreeNode(Integer parentId, NavTreeNode newNode) {
         if (newNode.getRoot()) {
             newNode.setDepth(0);
         } else {
@@ -44,7 +44,7 @@ public class NavTreeService {
             newNode.setParent(parent.get());
             newNode.setDepth(parent.get().getDepth() + 1);
         }
-        navTreeRepository.save(newNode);
+        return navTreeRepository.save(newNode);
     }
 
     @Transactional(readOnly = false)

@@ -3,7 +3,9 @@ package pengliu.me.backend.demo.nav;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pengliu.me.backend.demo.ResponseDocument;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,9 +57,10 @@ public class NavTreeController {
      * @param node
      */
     @PostMapping("/nav/tree")
-    public void createNavTreeNode(@RequestBody NavTreeNodeDTO node) {
+    public NavTreeNodeDTO createNavTreeNode(@RequestBody NavTreeNodeDTO node) {
         NavTreeNode navTreeNode = convertToEntity(node);
-        navTreeService.createNavTreeNode(node.getParentId(), navTreeNode);
+        NavTreeNode createdNode = navTreeService.createNavTreeNode(node.getParentId(), navTreeNode);
+        return convertToDto(createdNode);
     }
 
     /*
@@ -73,8 +76,9 @@ public class NavTreeController {
      * @throws Exception
      */
     @DeleteMapping("/nav/tree/{id}")
-    public void deleteNavTreeNode(@PathVariable Integer id) throws Exception {
+    public String deleteNavTreeNode(@PathVariable Integer id) throws Exception {
         navTreeService.deleteNavTreeNode(id);
+        return "SUCCESS";
     }
 
     /**
