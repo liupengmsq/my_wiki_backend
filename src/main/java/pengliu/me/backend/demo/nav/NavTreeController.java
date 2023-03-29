@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pengliu.me.backend.demo.ResponseDocument;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +26,9 @@ public class NavTreeController {
      * @return
      */
     @GetMapping("/nav/tree")
-    public List<NavTreeNodeDTO> getNavTreeNodes() {
+    public ResponseDocument<List<NavTreeNodeDTO>> getNavTreeNodes() {
         List<NavTreeNode> navTreeNodes = navTreeService.getAllTreeNodes();
-        return navTreeNodes.stream().map(this::convertToDto).collect(Collectors.toList());
+        return ResponseDocument.successResponse(navTreeNodes.stream().map(this::convertToDto).collect(Collectors.toList()));
     }
 
     /**
@@ -57,10 +56,10 @@ public class NavTreeController {
      * @param node
      */
     @PostMapping("/nav/tree")
-    public NavTreeNodeDTO createNavTreeNode(@RequestBody NavTreeNodeDTO node) {
+    public ResponseDocument<NavTreeNodeDTO> createNavTreeNode(@RequestBody NavTreeNodeDTO node) {
         NavTreeNode navTreeNode = convertToEntity(node);
         NavTreeNode createdNode = navTreeService.createNavTreeNode(node.getParentId(), navTreeNode);
-        return convertToDto(createdNode);
+        return ResponseDocument.successResponse(convertToDto(createdNode));
     }
 
     /*
@@ -76,9 +75,9 @@ public class NavTreeController {
      * @throws Exception
      */
     @DeleteMapping("/nav/tree/{id}")
-    public String deleteNavTreeNode(@PathVariable Integer id) throws Exception {
+    public ResponseDocument<?> deleteNavTreeNode(@PathVariable Integer id) throws Exception {
         navTreeService.deleteNavTreeNode(id);
-        return "SUCCESS";
+        return ResponseDocument.emptySuccessResponse();
     }
 
     /**
@@ -95,10 +94,11 @@ public class NavTreeController {
      * @param nodeToUpdate
      */
     @PutMapping("/nav/tree/{id}")
-    public void updateNavTreeNode(@PathVariable Integer id, @RequestBody NavTreeNodeDTO nodeToUpdate) {
+    public ResponseDocument<?> updateNavTreeNode(@PathVariable Integer id, @RequestBody NavTreeNodeDTO nodeToUpdate) {
         nodeToUpdate.setId(id);
         NavTreeNode navTreeNode = convertToEntity(nodeToUpdate);
         navTreeService.updateNavTreeNode(navTreeNode);
+        return ResponseDocument.emptySuccessResponse();
     }
 
     private NavTreeNodeDTO convertToDto(NavTreeNode navTreeNode) {
