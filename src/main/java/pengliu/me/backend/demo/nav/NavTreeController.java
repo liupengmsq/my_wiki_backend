@@ -2,6 +2,7 @@ package pengliu.me.backend.demo.nav;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import pengliu.me.backend.demo.ResponseDocument;
 
@@ -57,6 +58,8 @@ public class NavTreeController {
      */
     @PostMapping("/nav/tree")
     public ResponseDocument<NavTreeNodeDTO> createNavTreeNode(@RequestBody NavTreeNodeDTO node) {
+        Assert.hasText(node.getTarget(), "新建节点的目标URL不能为空！！");
+        Assert.hasText(node.getTitle(), "新建节点的标题不能为空！！");
         NavTreeNode navTreeNode = convertToEntity(node);
         NavTreeNode createdNode = navTreeService.createNavTreeNode(node.getParentId(), navTreeNode);
         return ResponseDocument.successResponse(convertToDto(createdNode));
