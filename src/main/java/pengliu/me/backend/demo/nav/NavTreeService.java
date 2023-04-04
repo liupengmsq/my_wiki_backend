@@ -36,11 +36,12 @@ public class NavTreeService {
     public NavTreeNode createNavTreeNode(Integer parentId, NavTreeNode newNode) {
         if (newNode.getRoot()) {
             newNode.setDepth(0);
+            Assert.isTrue(!existRootNodeInNavTree(), "已经存在根节点，不能再新建根节点了！！");
         } else {
             Optional<NavTreeNode> parent = navTreeRepository.findById(parentId);
             Assert.isTrue(parent.isPresent(),
-                    String.format("Fail to find parent node of newNode.\n" +
-                            "NewNode is: %s \n", newNode.toString()));
+                    String.format("找不到新节点对应的父节点，\n" +
+                            "新节点为： %s \n", newNode.toString()));
             newNode.setParent(parent.get());
             newNode.setDepth(parent.get().getDepth() + 1);
         }
@@ -48,12 +49,17 @@ public class NavTreeService {
     }
 
     @Transactional(readOnly = false)
+    public Boolean existRootNodeInNavTree() {
+        return navTreeRepository.findByIsRoot(true).size() > 0;
+    }
+
+    @Transactional(readOnly = false)
     public void deleteNavTreeNode(Integer id) throws Exception {
         Optional<NavTreeNode> node = navTreeRepository.findById(id);
-        Assert.isTrue(node.isPresent(), String.format("Fail to find node with id %s", id));
+        Assert.isTrue(node.isPresent(), String.format("待删除的节点不存在，其ID为： %s", id));
 
         if (node.get().getChildNodes().size() > 0 ) {
-            throw new Exception("Fail to delete node when node is not a leaf node!!!");
+            throw new Exception("不能删除一个非叶子节点！！");
         }
 
         navTreeRepository.deleteById(id);
@@ -62,7 +68,7 @@ public class NavTreeService {
     @Transactional(readOnly = false)
     public void updateNavTreeNode(NavTreeNode nodeToUpdate) {
         Optional<NavTreeNode> node = navTreeRepository.findById(nodeToUpdate.getId());
-        Assert.isTrue(node.isPresent(), String.format("Fail to find node with id %s", nodeToUpdate.getId()));
+        Assert.isTrue(node.isPresent(), String.format("待更新节点不存在，其ID为：%s", nodeToUpdate.getId()));
 
         node.get().setTarget(nodeToUpdate.getTarget());
         node.get().setTitle(nodeToUpdate.getTitle());
