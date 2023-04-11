@@ -32,6 +32,18 @@ public class NavTreeController {
         return ResponseDocument.successResponse(navTreeNodes.stream().map(this::convertToDto).collect(Collectors.toList()));
     }
 
+    @GetMapping("/nav/root")
+    public ResponseDocument<NavTreeNodeDTO> getNavTreeRoot() {
+        NavTreeNode navTreeNode = navTreeService.getTreeRootNode();
+        return ResponseDocument.successResponse(convertToDto(navTreeNode));
+    }
+
+    @GetMapping("/nav/tree/{id}")
+    public ResponseDocument<NavTreeNodeDTO> getNavTreeNodeById(@PathVariable Long id) {
+        NavTreeNode navTreeNode = navTreeService.getTreeNodeById(id);
+        return ResponseDocument.successResponse(convertToDto(navTreeNode));
+    }
+
     /**
      * 创建新的节点
      * HTTP请求：
@@ -78,7 +90,7 @@ public class NavTreeController {
      * @throws Exception
      */
     @DeleteMapping("/nav/tree/{id}")
-    public ResponseDocument<?> deleteNavTreeNode(@PathVariable Integer id) throws Exception {
+    public ResponseDocument<?> deleteNavTreeNode(@PathVariable Long id) throws Exception {
         navTreeService.deleteNavTreeNode(id);
         return ResponseDocument.emptySuccessResponse();
     }
@@ -97,7 +109,7 @@ public class NavTreeController {
      * @param nodeToUpdate
      */
     @PutMapping("/nav/tree/{id}")
-    public ResponseDocument<?> updateNavTreeNode(@PathVariable Integer id, @RequestBody NavTreeNodeDTO nodeToUpdate) {
+    public ResponseDocument<?> updateNavTreeNode(@PathVariable Long id, @RequestBody NavTreeNodeDTO nodeToUpdate) {
         nodeToUpdate.setId(id);
         NavTreeNode navTreeNode = convertToEntity(nodeToUpdate);
         navTreeService.updateNavTreeNode(navTreeNode);

@@ -18,14 +18,14 @@ import java.util.Set;
  *   PRIMARY KEY (`id`),
  *   KEY `parent_id_idx` (`parent_id`),
  *   CONSTRAINT `parent_id` FOREIGN KEY (`parent_id`) REFERENCES `nav_node` (`id`)
- * ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ * ) ENGINE=InnoDB AUTO_INCREMENT=542 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
  */
 @Entity
 @Table(name = "nav_node")
 public class NavTreeNode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "is_root", nullable = false)
     private Boolean isRoot;
@@ -49,11 +49,11 @@ public class NavTreeNode {
     @OneToMany(mappedBy="parent")
     private Set<NavTreeNode> childNodes = new HashSet<>();
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -65,9 +65,9 @@ public class NavTreeNode {
         isRoot = root;
     }
 
-    public Integer getParentId() {
+    public Long getParentId() {
         if (parent == null) {
-            return -1;
+            return -1L;
         }
         return parent.getId();
     }

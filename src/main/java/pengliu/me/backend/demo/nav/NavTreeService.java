@@ -32,8 +32,21 @@ public class NavTreeService {
         return navTreeRepository.findAll();
     }
 
+    public NavTreeNode getTreeNodeById(Long id) {
+        Optional<NavTreeNode> node = navTreeRepository.findById(id);
+        Assert.isTrue(node.isPresent(), String.format("找不到节点 %s\n", id));
+        return node.get();
+    }
+
+    public NavTreeNode getTreeRootNode() {
+        List<NavTreeNode> root = navTreeRepository.findByIsRoot(true);
+        Assert.isTrue(root.size() > 0 , "找不到根节点");
+        Assert.isTrue(root.size() == 1 , "存在多个根节点");
+        return root.get(0);
+    }
+
     @Transactional(readOnly = false)
-    public NavTreeNode createNavTreeNode(Integer parentId, NavTreeNode newNode) {
+    public NavTreeNode createNavTreeNode(Long parentId, NavTreeNode newNode) {
         if (newNode.getRoot()) {
             newNode.setDepth(0);
             Assert.isTrue(!existRootNodeInNavTree(), "已经存在根节点，不能再新建根节点了！！");
@@ -54,7 +67,7 @@ public class NavTreeService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteNavTreeNode(Integer id) throws Exception {
+    public void deleteNavTreeNode(Long id) throws Exception {
         Optional<NavTreeNode> node = navTreeRepository.findById(id);
         Assert.isTrue(node.isPresent(), String.format("待删除的节点不存在，其ID为： %s", id));
 

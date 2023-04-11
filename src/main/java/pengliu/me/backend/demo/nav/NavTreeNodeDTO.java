@@ -3,8 +3,8 @@ package pengliu.me.backend.demo.nav;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NavTreeNodeDTO {
-    private Integer id;
-    private Integer parentId;
+    private Long id;
+    private Long parentId;
     private Boolean isRoot;
     private String target;
 
@@ -13,19 +13,19 @@ public class NavTreeNodeDTO {
 
     private Integer depth;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getParentId() {
+    public Long getParentId() {
         return parentId;
     }
 
-    public void setParentId(Integer parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 

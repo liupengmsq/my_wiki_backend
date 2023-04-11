@@ -8,11 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional
-public interface NavTreeRepository  extends JpaRepository<NavTreeNode, Integer> {
+public interface NavTreeRepository  extends JpaRepository<NavTreeNode, Long> {
 
     @Modifying
     @Query("update NavTreeNode n set n.title = ?2 where n.id= ?1")
-    int updateTitleById(Integer id, String title);
+    int updateTitleById(Long id, String title);
 
     List<NavTreeNode> findByIsRoot(Boolean root);
 }
