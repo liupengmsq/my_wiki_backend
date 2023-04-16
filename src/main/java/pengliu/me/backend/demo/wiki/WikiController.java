@@ -1,10 +1,18 @@
 package pengliu.me.backend.demo.wiki;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pengliu.me.backend.demo.ResponseDocument;
+import pengliu.me.backend.demo.WikiConfiguration;
+import pengliu.me.backend.demo.util.DateTimeUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,6 +20,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api")
 public class WikiController {
+    @Autowired
+    private WikiConfiguration wikiConfiguration;
+
     @Autowired
     private WikiService wikiService;
 
@@ -51,12 +62,23 @@ public class WikiController {
         wikiService.createUpdateWikiPage(wiki);
     }
 
+    @PostMapping("/wiki/image")
+    public ResponseDocument<?> uploadImage(MultipartFile file) throws Exception {
+        return ResponseDocument.successResponse(wikiService.uploadWikiImage(file));
+    }
+
+    @DeleteMapping("/wiki/image/{fileName}")
+    public ResponseDocument<?> deleteImage(@PathVariable  String fileName) throws Exception {
+        wikiService.deleteWikiImage(fileName);
+        return ResponseDocument.emptySuccessResponse();
+    }
+
     private WikiDTO convertToDto(Wiki wiki) {
         modelMapper.typeMap(Wiki.class, WikiDTO.class)
-            .addMappings(mapper -> {
-                mapper.map(src -> src.getWikiCategory().getId(), WikiDTO::setCategoryId);
-                mapper.map(src -> src.getWikiCategory().getCategoryName(), WikiDTO::setCategoryName);
-            });
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getWikiCategory().getId(), WikiDTO::setCategoryId);
+                    mapper.map(src -> src.getWikiCategory().getCategoryName(), WikiDTO::setCategoryName);
+                });
         return modelMapper.map(wiki, WikiDTO.class);
     }
 }

@@ -22,7 +22,7 @@ public class ResponseDocument<T> {
     private T result;
 
     @JsonProperty("LocalDateTime")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "uuuu-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime localDateTime;
 
     @JsonProperty("HttpStatus")

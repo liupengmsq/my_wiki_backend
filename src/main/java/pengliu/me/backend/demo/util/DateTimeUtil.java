@@ -3,6 +3,7 @@ package pengliu.me.backend.demo.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class DateTimeUtil {
     private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -23,5 +24,11 @@ public class DateTimeUtil {
         } catch (ParseException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    public static String getUTCTimeStamp() {
+        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyyMMddHHmmssSSSS");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return simpleDateFormat.format(new Date());
     }
 }
