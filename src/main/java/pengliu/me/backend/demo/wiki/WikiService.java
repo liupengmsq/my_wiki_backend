@@ -62,6 +62,10 @@ public class WikiService {
         wikiRepository.save(wiki);
     }
 
+    public List<WikiImage> getAllWikiImages() {
+        return wikiImageRepository.findAll();
+    }
+
     @Transactional(readOnly = false)
     public String uploadWikiImage(MultipartFile file) throws Exception {
         logger.info("The file is uploading to FTP server.");

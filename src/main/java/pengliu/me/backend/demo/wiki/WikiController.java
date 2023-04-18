@@ -1,18 +1,11 @@
 package pengliu.me.backend.demo.wiki;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pengliu.me.backend.demo.ResponseDocument;
 import pengliu.me.backend.demo.WikiConfiguration;
-import pengliu.me.backend.demo.util.DateTimeUtil;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +53,11 @@ public class WikiController {
         Wiki wiki = wikiService.getWikiById(3L);
         wiki.setMarkdownContent("更新markdown内容111");
         wikiService.createUpdateWikiPage(wiki);
+    }
+
+    @GetMapping("/wiki/image")
+    public ResponseDocument<List<WikiImage>> getAllImages() {
+        return ResponseDocument.successResponse(wikiService.getAllWikiImages());
     }
 
     @PostMapping("/wiki/image")
