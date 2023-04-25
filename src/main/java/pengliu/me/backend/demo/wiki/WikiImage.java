@@ -5,6 +5,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * CREATE TABLE `wiki_image` (
+ *   `id` int NOT NULL AUTO_INCREMENT,
+ *   `file_name` varchar(255) NOT NULL,
+ *   `upload_time` datetime NOT NULL,
+ *   PRIMARY KEY (`id`)
+ * ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ */
 @Entity
 @Table(name = "wiki_image")
 public class WikiImage {
