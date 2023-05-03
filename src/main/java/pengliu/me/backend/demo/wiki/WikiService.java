@@ -57,6 +57,12 @@ public class WikiService {
         return category.get();
     }
 
+    public WikiCategory getWikiCategoryByName(String categoryName) {
+        List<WikiCategory> category = wikiCategoryRepository.findByCategoryName(categoryName);
+        Assert.isTrue(category.size() > 0, "不存在对应的wiki category name");
+        return category.get(0);
+    }
+
     @Transactional(readOnly = false)
     public void createUpdateWikiPage(Wiki wiki) {
         wikiRepository.save(wiki);

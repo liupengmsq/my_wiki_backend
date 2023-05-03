@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pengliu.me.backend.demo.ResponseDocument;
 import pengliu.me.backend.demo.WikiConfiguration;
+import pengliu.me.backend.demo.nav.NavTreeNode;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,11 +41,9 @@ public class WikiController {
     }
 
     @PostMapping("/wiki")
-    public void createWikiPage() {
-        WikiCategory wikiCategory = wikiService.getWikiCategoryById(1L);
-        Wiki wiki = new Wiki();
-        wiki.setTitle("123123");
-        wiki.setMarkdownContent("hhahahahahahah");
+    public void createWikiPage(@RequestBody WikiDTO wikiDTO) {
+        Wiki wiki = convertToEntity(wikiDTO);
+        WikiCategory wikiCategory = wikiService.getWikiCategoryByName(wikiDTO.getCategoryName());
         wiki.setWikiCategory(wikiCategory);
         wikiService.createUpdateWikiPage(wiki);
     }
@@ -78,5 +78,9 @@ public class WikiController {
                     mapper.map(src -> src.getWikiCategory().getCategoryName(), WikiDTO::setCategoryName);
                 });
         return modelMapper.map(wiki, WikiDTO.class);
+    }
+
+    private Wiki convertToEntity(WikiDTO wikiDto) {
+        return modelMapper.map(wikiDto, Wiki.class);
     }
 }
