@@ -64,8 +64,8 @@ public class WikiService {
     }
 
     @Transactional(readOnly = false)
-    public void createUpdateWikiPage(Wiki wiki) {
-        wikiRepository.save(wiki);
+    public Wiki createUpdateWikiPage(Wiki wiki) {
+        return wikiRepository.save(wiki);
     }
 
     public List<WikiImage> getAllWikiImages() {

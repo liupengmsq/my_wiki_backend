@@ -41,11 +41,12 @@ public class WikiController {
     }
 
     @PostMapping("/wiki")
-    public void createWikiPage(@RequestBody WikiDTO wikiDTO) {
+    public ResponseDocument<WikiDTO> createWikiPage(@RequestBody WikiDTO wikiDTO) {
         Wiki wiki = convertToEntity(wikiDTO);
         WikiCategory wikiCategory = wikiService.getWikiCategoryByName(wikiDTO.getCategoryName());
         wiki.setWikiCategory(wikiCategory);
-        wikiService.createUpdateWikiPage(wiki);
+        Wiki newCreatedWiki = wikiService.createUpdateWikiPage(wiki);
+        return ResponseDocument.successResponse(convertToDto(newCreatedWiki));
     }
 
     @PutMapping("/wiki")
