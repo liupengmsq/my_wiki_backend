@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.Date;
 
 @Service
 @Transactional(readOnly = true)
@@ -44,10 +45,23 @@ public class WikiService {
     }
 
     public Wiki getWikiById(Long id) {
+        return getWikiById(id, false);
+    }
+
+    @Transactional(readOnly = false)
+    public Wiki getWikiById(Long id, Boolean updateAccessInfo) {
         Optional<Wiki> wiki = wikiRepository.findById(id);
         Assert.isTrue(wiki.isPresent(), "不存在对应的wiki id");
 
-        return wiki.get();
+        Wiki returnedWiki = wiki.get();
+        if (!updateAccessInfo) {
+            return returnedWiki;
+        } else {
+            returnedWiki.setPageViewedNumber(returnedWiki.getPageViewedNumber() + 1);
+            returnedWiki.setAccessDateTime(new Date());
+            Wiki updatedWiki = wikiRepository.save(returnedWiki);
+            return updatedWiki;
+        }
     }
 
     public WikiCategory getWikiCategoryById(Long id) {

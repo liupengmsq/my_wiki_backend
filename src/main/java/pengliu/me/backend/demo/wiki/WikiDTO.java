@@ -8,7 +8,7 @@ public class WikiDTO {
     private String markdownContent;
     private Date createdDateTime;
     private Date updatedDateTime;
-    private Integer pageViewedNumber;
+    private Integer pageViewedNumber = 0;
 
     private Long categoryId;
     private String categoryName;

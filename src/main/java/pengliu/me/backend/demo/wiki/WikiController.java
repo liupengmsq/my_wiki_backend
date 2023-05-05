@@ -35,9 +35,14 @@ public class WikiController {
         return ResponseDocument.successResponse(wikiList.stream().map(this::convertToDto).collect(Collectors.toList()));
     }
 
+//    @GetMapping("/wiki/{id}")
+//    public ResponseDocument<WikiDTO> getWikiPageById(@PathVariable Long id) {
+//        return ResponseDocument.successResponse(convertToDto(wikiService.getWikiById(id)));
+//    }
+
     @GetMapping("/wiki/{id}")
-    public ResponseDocument<WikiDTO> getWikiPageById(@PathVariable Long id) {
-        return ResponseDocument.successResponse(convertToDto(wikiService.getWikiById(id)));
+    public ResponseDocument<WikiDTO> getWikiPageById(@PathVariable Long id, @RequestParam(value="updateAccessInfo", defaultValue = "false") Boolean updateAccessInfo) {
+        return ResponseDocument.successResponse(convertToDto(wikiService.getWikiById(id, updateAccessInfo)));
     }
 
     @PostMapping("/wiki")
