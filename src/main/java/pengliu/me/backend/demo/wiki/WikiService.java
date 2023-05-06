@@ -40,6 +40,11 @@ public class WikiService {
         return wikiCategoryRepository.findAll();
     }
 
+    @Transactional(readOnly = false)
+    public void deleteWikiCategoryById(Long id) {
+        wikiCategoryRepository.deleteById(id);
+    }
+
     public List<Wiki> getAllWikiPages() {
         return wikiRepository.findAll();
     }

@@ -14,5 +14,9 @@ public interface NavTreeRepository  extends JpaRepository<NavTreeNode, Long> {
     @Query("update NavTreeNode n set n.title = ?2 where n.id= ?1")
     int updateTitleById(Long id, String title);
 
-    List<NavTreeNode> findByIsRoot(Boolean root);
+    @Query(value = "SELECT * FROM nav_node WHERE category_type_id = ?1 and is_root = 1", nativeQuery = true)
+    List<NavTreeNode> findRootNodeByWikiCategoryId(Long categoryTypeId);
+
+    @Query(value = "SELECT * FROM nav_node WHERE category_type_id = ?1", nativeQuery = true)
+    List<NavTreeNode> findByWikiCategoryId(Long categoryTypeId);
 }

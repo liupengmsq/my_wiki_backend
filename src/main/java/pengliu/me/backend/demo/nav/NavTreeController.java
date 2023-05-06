@@ -23,18 +23,18 @@ public class NavTreeController {
     /**
      * 获取树中所有节点的信息
      * HTTP请求：
-         curl --location 'http://localhost:9091/api/nav/tree'
+         curl --location 'http://localhost:9091/api/nav/tree?categoryId=1'
      * @return
      */
     @GetMapping("/nav/tree")
-    public ResponseDocument<List<NavTreeNodeDTO>> getNavTreeNodes() {
-        List<NavTreeNode> navTreeNodes = navTreeService.getAllTreeNodes();
+    public ResponseDocument<List<NavTreeNodeDTO>> getNavTreeNodesByCategoryId(@RequestParam("categoryId") Long categoryId) {
+        List<NavTreeNode> navTreeNodes = navTreeService.getTreeNodesByCategoryId(categoryId);
         return ResponseDocument.successResponse(navTreeNodes.stream().map(this::convertToDto).collect(Collectors.toList()));
     }
 
     @GetMapping("/nav/root")
-    public ResponseDocument<NavTreeNodeDTO> getNavTreeRoot() {
-        NavTreeNode navTreeNode = navTreeService.getTreeRootNode();
+    public ResponseDocument<NavTreeNodeDTO> getNavTreeRootByCategoryId(@RequestParam("categoryId") Long categoryId) {
+        NavTreeNode navTreeNode = navTreeService.getTreeRootNodeByCategoryId(categoryId);
         return ResponseDocument.successResponse(convertToDto(navTreeNode));
     }
 
@@ -69,11 +69,11 @@ public class NavTreeController {
      * @param node
      */
     @PostMapping("/nav/tree")
-    public ResponseDocument<NavTreeNodeDTO> createNavTreeNode(@RequestBody NavTreeNodeDTO node) {
+    public ResponseDocument<NavTreeNodeDTO> createNavTreeNode(@RequestBody NavTreeNodeDTO node, @RequestParam("categoryId") Long categoryId) {
         Assert.hasText(node.getTarget(), "新建节点的目标URL不能为空！！");
         Assert.hasText(node.getTitle(), "新建节点的标题不能为空！！");
         NavTreeNode navTreeNode = convertToEntity(node);
-        NavTreeNode createdNode = navTreeService.createNavTreeNode(node.getParentId(), navTreeNode);
+        NavTreeNode createdNode = navTreeService.createNavTreeNode(node.getParentId(), navTreeNode, categoryId);
         return ResponseDocument.successResponse(convertToDto(createdNode));
     }
 

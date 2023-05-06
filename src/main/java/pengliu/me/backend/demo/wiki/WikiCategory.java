@@ -3,6 +3,7 @@ package pengliu.me.backend.demo.wiki;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import pengliu.me.backend.demo.nav.NavTreeNode;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -45,6 +46,10 @@ public class WikiCategory {
     @OrderBy("createdDateTime")
     private Set<Wiki> wikiSet;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "wikiCategory", fetch = FetchType.LAZY, cascade = CascadeType.MERGE )
+    private Set<NavTreeNode> navTreeNodes;
+
     public Long getId() {
         return id;
     }
@@ -83,5 +88,13 @@ public class WikiCategory {
 
     public void setWikiSet(Set<Wiki> wikiSet) {
         this.wikiSet = wikiSet;
+    }
+
+    public Set<NavTreeNode> getNavTreeNodes() {
+        return navTreeNodes;
+    }
+
+    public void setNavTreeNodes(Set<NavTreeNode> navTreeNodes) {
+        this.navTreeNodes = navTreeNodes;
     }
 }

@@ -1,7 +1,9 @@
 package pengliu.me.backend.demo.nav;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import pengliu.me.backend.demo.wiki.WikiCategory;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -48,6 +50,11 @@ public class NavTreeNode {
     @JsonIgnore
     @OneToMany(mappedBy="parent")
     private Set<NavTreeNode> childNodes = new HashSet<>();
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "category_type_id", referencedColumnName = "id", nullable = false)
+    private WikiCategory wikiCategory;
 
     public Long getId() {
         return id;
@@ -114,6 +121,14 @@ public class NavTreeNode {
 
     public void setParent(NavTreeNode parent) {
         this.parent = parent;
+    }
+
+    public WikiCategory getWikiCategory() {
+        return wikiCategory;
+    }
+
+    public void setWikiCategory(WikiCategory wikiCategory) {
+        this.wikiCategory = wikiCategory;
     }
 
     @Override

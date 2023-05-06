@@ -29,16 +29,17 @@ public class WikiController {
         return ResponseDocument.successResponse(wikiService.getAllWikiCategories());
     }
 
+    @DeleteMapping("/wiki/category/{id}")
+    public ResponseDocument<?> deleteWikiCategoryById(@PathVariable Long id) {
+        wikiService.deleteWikiCategoryById(id);
+        return ResponseDocument.emptySuccessResponse();
+    }
+
     @GetMapping("/wiki")
     public ResponseDocument<List<WikiDTO>> getAllWikiPages() {
         List<Wiki> wikiList = wikiService.getAllWikiPages();
         return ResponseDocument.successResponse(wikiList.stream().map(this::convertToDto).collect(Collectors.toList()));
     }
-
-//    @GetMapping("/wiki/{id}")
-//    public ResponseDocument<WikiDTO> getWikiPageById(@PathVariable Long id) {
-//        return ResponseDocument.successResponse(convertToDto(wikiService.getWikiById(id)));
-//    }
 
     @GetMapping("/wiki/{id}")
     public ResponseDocument<WikiDTO> getWikiPageById(@PathVariable Long id, @RequestParam(value="updateAccessInfo", defaultValue = "false") Boolean updateAccessInfo) {
