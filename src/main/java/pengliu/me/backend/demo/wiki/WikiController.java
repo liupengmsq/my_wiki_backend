@@ -29,6 +29,11 @@ public class WikiController {
         return ResponseDocument.successResponse(wikiService.getAllWikiCategories());
     }
 
+    @GetMapping("/wiki/category/default")
+    public ResponseDocument<WikiCategory> getDefaultWikiCategory() {
+        return ResponseDocument.successResponse(wikiService.getDefaultWikiCategory());
+    }
+
     @DeleteMapping("/wiki/category/{id}")
     public ResponseDocument<?> deleteWikiCategoryById(@PathVariable Long id) {
         wikiService.deleteWikiCategoryById(id);

@@ -41,6 +41,9 @@ public class WikiCategory {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDateTime;
 
+    @Column(name = "is_default", nullable = false)
+    private Boolean isDefault;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "wikiCategory", fetch = FetchType.LAZY, cascade = CascadeType.MERGE )
     @OrderBy("createdDateTime")
@@ -80,6 +83,14 @@ public class WikiCategory {
 
     public void setUpdatedDateTime(Date updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
+    }
+
+    public Boolean getDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(Boolean aDefault) {
+        isDefault = aDefault;
     }
 
     public Set<Wiki> getWikiSet() {

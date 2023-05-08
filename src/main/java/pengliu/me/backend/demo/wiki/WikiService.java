@@ -40,6 +40,13 @@ public class WikiService {
         return wikiCategoryRepository.findAll();
     }
 
+    public WikiCategory getDefaultWikiCategory() {
+        List<WikiCategory> defaultCategory =  wikiCategoryRepository.findByIsDefault(true);
+        Assert.isTrue(defaultCategory.size() > 0 , "找不到默认的wiki分类！！");
+        Assert.isTrue(defaultCategory.size() == 1 , "存在多个默认的wiki分类！！");
+        return defaultCategory.get(0);
+    }
+
     @Transactional(readOnly = false)
     public void deleteWikiCategoryById(Long id) {
         wikiCategoryRepository.deleteById(id);

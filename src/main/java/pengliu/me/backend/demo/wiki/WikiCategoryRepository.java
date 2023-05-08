@@ -8,4 +8,6 @@ import java.util.List;
 @Transactional
 public interface WikiCategoryRepository extends JpaRepository<WikiCategory, Long> {
     List<WikiCategory> findByCategoryName(String categoryName);
+
+    List<WikiCategory> findByIsDefault(Boolean isDefault);
 }
