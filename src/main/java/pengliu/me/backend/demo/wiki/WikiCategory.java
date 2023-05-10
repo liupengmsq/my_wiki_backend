@@ -32,7 +32,7 @@ public class WikiCategory {
     private String categoryName;
 
     @CreationTimestamp
-    @Column(name = "created_datetime", nullable = false, columnDefinition="DATETIME")
+    @Column(name = "created_datetime", nullable = false, columnDefinition="DATETIME", updatable= false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDateTime;
 

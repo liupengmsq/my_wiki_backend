@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pengliu.me.backend.demo.ResponseDocument;
 import pengliu.me.backend.demo.WikiConfiguration;
-import pengliu.me.backend.demo.nav.NavTreeNode;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +31,16 @@ public class WikiController {
     @GetMapping("/wiki/category/default")
     public ResponseDocument<WikiCategory> getDefaultWikiCategory() {
         return ResponseDocument.successResponse(wikiService.getDefaultWikiCategory());
+    }
+
+    @PostMapping("/wiki/category")
+    public ResponseDocument<WikiCategory> createWikiCategory(@RequestBody WikiCategory wikiCategory) {
+        return ResponseDocument.successResponse(wikiService.createUpdateWikiCategory(wikiCategory));
+    }
+
+    @PutMapping("/wiki/category")
+    public ResponseDocument<WikiCategory> updateWikiCategory(@RequestBody WikiCategory wikiCategory) {
+        return ResponseDocument.successResponse(wikiService.createUpdateWikiCategory(wikiCategory));
     }
 
     @DeleteMapping("/wiki/category/{id}")

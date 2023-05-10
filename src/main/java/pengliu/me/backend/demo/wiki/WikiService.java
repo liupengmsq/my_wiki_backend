@@ -49,11 +49,31 @@ public class WikiService {
 
     @Transactional(readOnly = false)
     public void deleteWikiCategoryById(Long id) {
+        Optional<WikiCategory> wikiCategoryOption = wikiCategoryRepository.findById(id);
+        Assert.isTrue(wikiCategoryOption.isPresent(), "不存在对应的wiki category id");
+        Assert.isTrue(!wikiCategoryOption.get().getDefault(), "禁止删除默认的Wiki分类！！");
         wikiCategoryRepository.deleteById(id);
     }
 
     public List<Wiki> getAllWikiPages() {
         return wikiRepository.findAll();
+    }
+
+    @Transactional(readOnly = false)
+    public WikiCategory createUpdateWikiCategory(WikiCategory wikiCategory) {
+        List<WikiCategory> defaultCategory = wikiCategoryRepository.findByIsDefault(true);
+        // 现存数据没有默认分类，允许保存或更新
+        if (defaultCategory.size() == 0) {
+            return wikiCategoryRepository.save(wikiCategory);
+        } else if (wikiCategory.getDefault()) { // 已经存在默认分类，并且当要新建或更新也想成为默认分类时
+            if (defaultCategory.get(0).getId().equals(wikiCategory.getId())) { // 如果要更新的就是已经存在的默认分类，允许更新
+                return wikiCategoryRepository.save(wikiCategory);
+            } else {
+                throw new RuntimeException("已经存在默认的Wiki分类！！");
+            }
+        } else {
+            return wikiCategoryRepository.save(wikiCategory);
+        }
     }
 
     public Wiki getWikiById(Long id) {
