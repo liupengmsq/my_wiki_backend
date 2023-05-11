@@ -38,7 +38,7 @@ public class Wiki {
     private String markdownContent;
 
     @CreationTimestamp
-    @Column(name = "created_datetime", nullable = false, columnDefinition="DATETIME")
+    @Column(name = "created_datetime", nullable = false, columnDefinition="DATETIME", updatable= false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDateTime;
 

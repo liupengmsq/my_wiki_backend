@@ -8,6 +8,7 @@ public class WikiDTO {
     private String markdownContent;
     private Date createdDateTime;
     private Date updatedDateTime;
+    private Date accessDateTime;
     private Integer pageViewedNumber = 0;
 
     private Long categoryId;
@@ -51,6 +52,14 @@ public class WikiDTO {
 
     public void setUpdatedDateTime(Date updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
+    }
+
+    public Date getAccessDateTime() {
+        return accessDateTime;
+    }
+
+    public void setAccessDateTime(Date accessDateTime) {
+        this.accessDateTime = accessDateTime;
     }
 
     public Integer getPageViewedNumber() {

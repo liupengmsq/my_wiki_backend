@@ -77,24 +77,22 @@ public class WikiService {
     }
 
     public Wiki getWikiById(Long id) {
-        return getWikiById(id, false);
+        Optional<Wiki> wiki = wikiRepository.findById(id);
+        Assert.isTrue(wiki.isPresent(), "不存在对应的wiki id");
+        return wiki.get();
     }
 
     @Transactional(readOnly = false)
     public Wiki getWikiById(Long id, Boolean updateAccessInfo) {
-        Optional<Wiki> wiki = wikiRepository.findById(id);
-        Assert.isTrue(wiki.isPresent(), "不存在对应的wiki id");
-
-        Wiki returnedWiki = wiki.get();
+        Wiki returnedWiki = getWikiById(id);
         if (!updateAccessInfo) {
             return returnedWiki;
         } else {
-            returnedWiki.setPageViewedNumber(returnedWiki.getPageViewedNumber() + 1);
-            returnedWiki.setAccessDateTime(new Date());
-            Wiki updatedWiki = wikiRepository.save(returnedWiki);
-            return updatedWiki;
+            wikiRepository.updateAccessDateTimeAndPageViewedNumberById(id, new Date(), returnedWiki.getPageViewedNumber() + 1);
+            return getWikiById(id);
         }
     }
+
 
     public WikiCategory getWikiCategoryById(Long id) {
         Optional<WikiCategory> category = wikiCategoryRepository.findById(id);

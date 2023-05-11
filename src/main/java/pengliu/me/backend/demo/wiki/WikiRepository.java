@@ -1,9 +1,15 @@
 package pengliu.me.backend.demo.wiki;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Date;
 
 @Transactional
 public interface WikiRepository extends JpaRepository<Wiki, Long> {
-
+    // The EntityManager doesn't flush change automatically by default. You should use the following option with your statement of query:
+    @Modifying(clearAutomatically = true)
+    @Query("update Wiki w set w.accessDateTime = ?2, w.pageViewedNumber = ?3 where w.id= ?1")
+    int updateAccessDateTimeAndPageViewedNumberById(Long id, Date accessDateTime, Integer pageViewedNumber);
 }

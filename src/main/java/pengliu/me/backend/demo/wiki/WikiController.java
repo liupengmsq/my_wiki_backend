@@ -62,18 +62,20 @@ public class WikiController {
 
     @PostMapping("/wiki")
     public ResponseDocument<WikiDTO> createWikiPage(@RequestBody WikiDTO wikiDTO) {
+        return createUpdateWikiPage(wikiDTO);
+    }
+
+    @PutMapping("/wiki")
+    public ResponseDocument<WikiDTO> updateWikiPage(@RequestBody WikiDTO wikiDTO) {
+        return createUpdateWikiPage(wikiDTO);
+    }
+
+    private ResponseDocument<WikiDTO> createUpdateWikiPage(@RequestBody WikiDTO wikiDTO) {
         Wiki wiki = convertToEntity(wikiDTO);
         WikiCategory wikiCategory = wikiService.getWikiCategoryByName(wikiDTO.getCategoryName());
         wiki.setWikiCategory(wikiCategory);
         Wiki newCreatedWiki = wikiService.createUpdateWikiPage(wiki);
         return ResponseDocument.successResponse(convertToDto(newCreatedWiki));
-    }
-
-    @PutMapping("/wiki")
-    public void updateWikiPage() {
-        Wiki wiki = wikiService.getWikiById(3L);
-        wiki.setMarkdownContent("更新markdown内容111");
-        wikiService.createUpdateWikiPage(wiki);
     }
 
     @GetMapping("/wiki/image")
