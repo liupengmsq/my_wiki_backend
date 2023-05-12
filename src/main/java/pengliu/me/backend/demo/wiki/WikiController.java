@@ -60,6 +60,12 @@ public class WikiController {
         return ResponseDocument.successResponse(convertToDto(wikiService.getWikiById(id, updateAccessInfo)));
     }
 
+    @DeleteMapping("/wiki/{id}")
+    public ResponseDocument<?> deleteWikiPageById(@PathVariable Long id) {
+        wikiService.deleteWikiById(id);
+        return ResponseDocument.emptySuccessResponse();
+    }
+
     @PostMapping("/wiki")
     public ResponseDocument<WikiDTO> createWikiPage(@RequestBody WikiDTO wikiDTO) {
         return createUpdateWikiPage(wikiDTO);

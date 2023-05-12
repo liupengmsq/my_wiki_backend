@@ -93,6 +93,10 @@ public class WikiService {
         }
     }
 
+    @Transactional(readOnly = false)
+    public void deleteWikiById(Long id) {
+        wikiRepository.deleteById(id);
+    }
 
     public WikiCategory getWikiCategoryById(Long id) {
         Optional<WikiCategory> category = wikiCategoryRepository.findById(id);
