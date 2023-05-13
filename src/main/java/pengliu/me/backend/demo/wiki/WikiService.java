@@ -67,6 +67,9 @@ public class WikiService {
             return wikiCategoryRepository.save(wikiCategory);
         } else if (wikiCategory.getDefault()) { // 已经存在默认分类，并且当要新建或更新也想成为默认分类时
             if (defaultCategory.get(0).getId().equals(wikiCategory.getId())) { // 如果要更新的就是已经存在的默认分类，允许更新
+                if (!wikiCategory.getActive()) {
+                    throw new RuntimeException("禁止将默认Wiki分类的条目失效！！");
+                }
                 return wikiCategoryRepository.save(wikiCategory);
             } else {
                 throw new RuntimeException("已经存在默认的Wiki分类！！");

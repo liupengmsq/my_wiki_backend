@@ -44,6 +44,9 @@ public class WikiCategory {
     @Column(name = "is_default", nullable = false)
     private Boolean isDefault;
 
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "wikiCategory", fetch = FetchType.LAZY, cascade = CascadeType.MERGE )
     @OrderBy("createdDateTime")
@@ -91,6 +94,14 @@ public class WikiCategory {
 
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public Set<Wiki> getWikiSet() {
