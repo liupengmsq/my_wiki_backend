@@ -1,5 +1,6 @@
 package pengliu.me.backend.demo.wiki;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.io.FilenameUtils;
@@ -119,8 +120,12 @@ public class WikiService {
         return wikiRepository.save(wiki);
     }
 
-    public List<WikiImage> getAllWikiImages() {
-        return wikiImageRepository.findAll();
+    public List<WikiImage> getAllWikiImagesByFileName(String fileName) {
+        if (StringUtils.isEmpty(fileName)) {
+            return wikiImageRepository.findAll();
+        } else {
+            return wikiImageRepository.findByFileNameContaining(fileName);
+        }
     }
 
     @Transactional(readOnly = false)

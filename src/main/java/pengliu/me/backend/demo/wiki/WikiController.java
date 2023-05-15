@@ -85,9 +85,10 @@ public class WikiController {
     }
 
     @GetMapping("/wiki/image")
-    public ResponseDocument<List<WikiImage>> getAllImages() {
-        return ResponseDocument.successResponse(wikiService.getAllWikiImages());
+    public ResponseDocument<List<WikiImage>> getAllImages(@RequestParam(defaultValue = "") String fileName) {
+        return ResponseDocument.successResponse(wikiService.getAllWikiImagesByFileName(fileName));
     }
+
 
     @PostMapping("/wiki/image")
     public ResponseDocument<?> uploadImage(MultipartFile file) throws Exception {
