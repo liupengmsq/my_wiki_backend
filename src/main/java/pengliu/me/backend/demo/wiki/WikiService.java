@@ -60,6 +60,10 @@ public class WikiService {
         return wikiRepository.findAll();
     }
 
+    public List<Wiki> searchWikiPage(String searchText) {
+        return wikiRepository.findByTitleContainingOrMarkdownContentContaining(searchText, searchText);
+    }
+
     @Transactional(readOnly = false)
     public WikiCategory createUpdateWikiCategory(WikiCategory wikiCategory) {
         List<WikiCategory> defaultCategory = wikiCategoryRepository.findByIsDefault(true);
