@@ -61,7 +61,7 @@ public class WikiService {
     }
 
     public List<Wiki> searchWikiPage(String searchText) {
-        return wikiRepository.findByTitleContainingOrMarkdownContentContaining(searchText, searchText);
+        return wikiRepository.findByTitleContainingIgnoreCaseOrMarkdownContentContainingIgnoreCase(searchText, searchText);
     }
 
     @Transactional(readOnly = false)

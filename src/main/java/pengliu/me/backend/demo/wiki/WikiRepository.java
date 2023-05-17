@@ -14,5 +14,5 @@ public interface WikiRepository extends JpaRepository<Wiki, Long> {
     @Query("update Wiki w set w.accessDateTime = ?2, w.pageViewedNumber = ?3 where w.id= ?1")
     int updateAccessDateTimeAndPageViewedNumberById(Long id, Date accessDateTime, Integer pageViewedNumber);
 
-    List<Wiki> findByTitleContainingOrMarkdownContentContaining(String title, String markdownContent);
+    List<Wiki> findByTitleContainingIgnoreCaseOrMarkdownContentContainingIgnoreCase(String title, String markdownContent);
 }
