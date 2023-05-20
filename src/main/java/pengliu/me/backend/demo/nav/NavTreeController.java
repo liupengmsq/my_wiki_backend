@@ -1,5 +1,6 @@
 package pengliu.me.backend.demo.nav;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -27,8 +28,14 @@ public class NavTreeController {
      * @return
      */
     @GetMapping("/nav/tree")
-    public ResponseDocument<List<NavTreeNodeDTO>> getNavTreeNodesByCategoryId(@RequestParam("categoryId") Long categoryId) {
-        List<NavTreeNode> navTreeNodes = navTreeService.getTreeNodesByCategoryId(categoryId);
+    public ResponseDocument<List<NavTreeNodeDTO>> getNavTreeNodeByCategoryIdAndTarget(@RequestParam("categoryId") Long categoryId,
+                                                                                      @RequestParam(name = "target", required = false) String target) {
+        List<NavTreeNode> navTreeNodes = null;
+        if (StringUtils.isEmpty(target)) {
+            navTreeNodes = navTreeService.getTreeNodesByCategoryId(categoryId);
+        } else {
+            navTreeNodes = navTreeService.getTreeNodesByCategoryIdAndTarget(categoryId, target);
+        }
         return ResponseDocument.successResponse(navTreeNodes.stream().map(this::convertToDto).collect(Collectors.toList()));
     }
 

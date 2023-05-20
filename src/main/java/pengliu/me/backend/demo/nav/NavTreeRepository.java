@@ -19,4 +19,6 @@ public interface NavTreeRepository  extends JpaRepository<NavTreeNode, Long> {
 
     @Query(value = "SELECT * FROM nav_node WHERE category_type_id = ?1", nativeQuery = true)
     List<NavTreeNode> findByWikiCategoryId(Long categoryTypeId);
+
+    List<NavTreeNode> findByWikiCategoryIdAndTarget(Long categoryId, String target);
 }

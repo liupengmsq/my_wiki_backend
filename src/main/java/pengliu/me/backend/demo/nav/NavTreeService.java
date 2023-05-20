@@ -40,6 +40,10 @@ public class NavTreeService {
         return navTreeRepository.findByWikiCategoryId(categoryId);
     }
 
+    public List<NavTreeNode> getTreeNodesByCategoryIdAndTarget(Long categoryId, String target) {
+        return navTreeRepository.findByWikiCategoryIdAndTarget(categoryId, target);
+    }
+
     public NavTreeNode getTreeNodeById(Long id) {
         Optional<NavTreeNode> node = navTreeRepository.findById(id);
         Assert.isTrue(node.isPresent(), String.format("找不到节点 %s\n", id));
