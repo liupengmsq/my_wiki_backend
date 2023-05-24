@@ -7,6 +7,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -58,6 +60,10 @@ public class WikiService {
 
     public List<Wiki> getAllWikiPages() {
         return wikiRepository.findAll();
+    }
+
+    public Page<Wiki> getAllWikiPagesOrderByCreatedDateTimeDesc(Pageable pageable) {
+        return wikiRepository.findAllByOrderByCreatedDateTimeDesc(pageable);
     }
 
     public List<Wiki> searchWikiPage(String searchText) {

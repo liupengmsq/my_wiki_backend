@@ -1,5 +1,7 @@
 package pengliu.me.backend.demo.wiki;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +17,7 @@ public interface WikiRepository extends JpaRepository<Wiki, Long> {
     int updateAccessDateTimeAndPageViewedNumberById(Long id, Date accessDateTime, Integer pageViewedNumber);
 
     List<Wiki> findByTitleContainingIgnoreCaseOrMarkdownContentContainingIgnoreCase(String title, String markdownContent);
+
+    Page<Wiki> findAllByOrderByCreatedDateTimeDesc(Pageable pageable);
+
 }
