@@ -3,6 +3,7 @@ package pengliu.me.backend.demo.wiki;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,9 +59,13 @@ public class WikiController {
     }
 
     @GetMapping("/wiki/pageable")
-    public ResponseDocument<List<WikiDTO>> getPageableAllWikiPages(@RequestParam Integer pageIndex, @RequestParam Integer size) {
+    public ResponseDocument<Page<WikiDTO>> getPageableAllWikiPages(@RequestParam Integer pageIndex, @RequestParam Integer size) {
         Page<Wiki> wikiList = wikiService.getAllWikiPagesOrderByCreatedDateTimeDesc(PageRequest.of(pageIndex, size));
-        return ResponseDocument.successResponse(wikiList.stream().map(this::convertToDto).collect(Collectors.toList()));
+        Page<WikiDTO> wikiDTOPageable = new PageImpl<WikiDTO>(wikiList.stream().map(this::convertToDto).collect(Collectors.toList()),
+                PageRequest.of(pageIndex, size),
+                wikiList.getTotalElements());
+
+        return ResponseDocument.successResponse(wikiDTOPageable);
     }
 
     @GetMapping("/wiki/search")
