@@ -68,6 +68,18 @@ public class WikiController {
         return ResponseDocument.successResponse(wikiDTOPageable);
     }
 
+    @GetMapping("/wiki/top/created")
+    public ResponseDocument<List<WikiDTO>> getFirst20ByOrOrderByCreatedDateTimeDesc() {
+        List<Wiki> wikiList = wikiService.getFirst20ByOrderByCreatedDateTimeDesc();
+        return ResponseDocument.successResponse(wikiList.stream().map(this::convertToDto).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/wiki/top/read")
+    public ResponseDocument<List<WikiDTO>> getFirst20ByOrderByPageViewedNumberDesc() {
+        List<Wiki> wikiList = wikiService.getFirst20ByOrderByPageViewedNumberDesc();
+        return ResponseDocument.successResponse(wikiList.stream().map(this::convertToDto).collect(Collectors.toList()));
+    }
+
     @GetMapping("/wiki/search")
     public ResponseDocument<List<WikiDTO>> searchWikiPages(@RequestParam("searchText") String searchText) {
         List<Wiki> wikiList = wikiService.searchWikiPage(searchText);

@@ -20,4 +20,7 @@ public interface WikiRepository extends JpaRepository<Wiki, Long> {
 
     Page<Wiki> findAllByOrderByCreatedDateTimeDesc(Pageable pageable);
 
+    List<Wiki> findFirst20ByOrderByCreatedDateTimeDesc();
+
+    List<Wiki> findFirst20ByOrderByPageViewedNumberDesc();
 }

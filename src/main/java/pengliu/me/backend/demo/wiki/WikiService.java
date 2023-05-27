@@ -66,6 +66,14 @@ public class WikiService {
         return wikiRepository.findAllByOrderByCreatedDateTimeDesc(pageable);
     }
 
+    public List<Wiki> getFirst20ByOrderByCreatedDateTimeDesc() {
+        return wikiRepository.findFirst20ByOrderByCreatedDateTimeDesc();
+    }
+
+    public List<Wiki> getFirst20ByOrderByPageViewedNumberDesc() {
+        return wikiRepository.findFirst20ByOrderByPageViewedNumberDesc();
+    }
+
     public List<Wiki> searchWikiPage(String searchText) {
         return wikiRepository.findByTitleContainingIgnoreCaseOrMarkdownContentContainingIgnoreCase(searchText, searchText);
     }
