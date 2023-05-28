@@ -10,4 +10,7 @@ public interface WikiCategoryRepository extends JpaRepository<WikiCategory, Long
     List<WikiCategory> findByCategoryName(String categoryName);
 
     List<WikiCategory> findByIsDefault(Boolean isDefault);
+
+    List<WikiCategory> findByIsBlog(Boolean isBlog);
+
 }

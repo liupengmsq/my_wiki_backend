@@ -43,11 +43,22 @@ public class WikiService {
         return wikiCategoryRepository.findAll();
     }
 
+    public List<WikiCategory> getHeaderWikiCategories() {
+        return wikiCategoryRepository.findByIsBlog(false);
+    }
+
     public WikiCategory getDefaultWikiCategory() {
         List<WikiCategory> defaultCategory =  wikiCategoryRepository.findByIsDefault(true);
         Assert.isTrue(defaultCategory.size() > 0 , "找不到默认的wiki分类！！");
         Assert.isTrue(defaultCategory.size() == 1 , "存在多个默认的wiki分类！！");
         return defaultCategory.get(0);
+    }
+
+    public WikiCategory getBlogWikiCategory() {
+        List<WikiCategory> blogCategory =  wikiCategoryRepository.findByIsBlog(true);
+        Assert.isTrue(blogCategory.size() > 0 , "找不到blog的wiki分类！！");
+        Assert.isTrue(blogCategory.size() == 1 , "存在多个blog的wiki分类！！");
+        return blogCategory.get(0);
     }
 
     @Transactional(readOnly = false)
@@ -81,21 +92,32 @@ public class WikiService {
     @Transactional(readOnly = false)
     public WikiCategory createUpdateWikiCategory(WikiCategory wikiCategory) {
         List<WikiCategory> defaultCategory = wikiCategoryRepository.findByIsDefault(true);
-        // 现存数据没有默认分类，允许保存或更新
-        if (defaultCategory.size() == 0) {
+        List<WikiCategory> blogCategory = wikiCategoryRepository.findByIsBlog(true);
+        // 现存数据没有默认分类或blog分类，允许保存或更新
+        if (defaultCategory.size() == 0 && blogCategory.size() == 0) {
             return wikiCategoryRepository.save(wikiCategory);
-        } else if (wikiCategory.getDefault()) { // 已经存在默认分类，并且当要新建或更新也想成为默认分类时
+        }
+
+        if (defaultCategory.size() > 0 && wikiCategory.getDefault()) { // 已经存在默认分类，并且当要新建或更新也想成为默认分类时
             if (defaultCategory.get(0).getId().equals(wikiCategory.getId())) { // 如果要更新的就是已经存在的默认分类，允许更新
                 if (!wikiCategory.getActive()) {
                     throw new RuntimeException("禁止将默认Wiki分类的条目失效！！");
                 }
-                return wikiCategoryRepository.save(wikiCategory);
             } else {
                 throw new RuntimeException("已经存在默认的Wiki分类！！");
             }
-        } else {
-            return wikiCategoryRepository.save(wikiCategory);
         }
+
+        if (blogCategory.size() > 0 && wikiCategory.getBlog()) { // 已经存在Blog分类，并且当要新建或更新也想成为Blog分类时
+            if (blogCategory.get(0).getId().equals(wikiCategory.getId())) { // 如果要更新的就是已经存在的Blog分类，允许更新
+                if (!wikiCategory.getActive()) {
+                    throw new RuntimeException("禁止将Blog Wiki分类的条目失效！！");
+                }
+            } else {
+                throw new RuntimeException("已经存在Blog的Wiki分类！！");
+            }
+        }
+        return wikiCategoryRepository.save(wikiCategory);
     }
 
     public Wiki getWikiById(Long id) {

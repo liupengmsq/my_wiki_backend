@@ -31,9 +31,19 @@ public class WikiController {
         return ResponseDocument.successResponse(wikiService.getAllWikiCategories());
     }
 
+    @GetMapping("/wiki/category/headers")
+    public ResponseDocument<List<WikiCategory>> getHeaderWikiCategories() {
+        return ResponseDocument.successResponse(wikiService.getHeaderWikiCategories());
+    }
+
     @GetMapping("/wiki/category/default")
     public ResponseDocument<WikiCategory> getDefaultWikiCategory() {
         return ResponseDocument.successResponse(wikiService.getDefaultWikiCategory());
+    }
+
+    @GetMapping("/wiki/category/blog")
+    public ResponseDocument<WikiCategory> getBlogWikiCategory() {
+        return ResponseDocument.successResponse(wikiService.getBlogWikiCategory());
     }
 
     @PostMapping("/wiki/category")

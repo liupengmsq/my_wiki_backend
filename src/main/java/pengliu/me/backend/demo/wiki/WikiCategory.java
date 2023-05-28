@@ -47,6 +47,9 @@ public class WikiCategory {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
+    @Column(name = "is_blog", nullable = false)
+    private Boolean isBlog;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "wikiCategory", fetch = FetchType.LAZY, cascade = CascadeType.MERGE )
     @OrderBy("createdDateTime")
@@ -102,6 +105,14 @@ public class WikiCategory {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public Boolean getBlog() {
+        return isBlog;
+    }
+
+    public void setBlog(Boolean blog) {
+        isBlog = blog;
     }
 
     public Set<Wiki> getWikiSet() {
