@@ -13,7 +13,7 @@ import pengliu.me.backend.demo.WikiConfiguration;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin
+//@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class WikiController {
