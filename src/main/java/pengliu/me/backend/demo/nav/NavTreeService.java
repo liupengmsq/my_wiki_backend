@@ -7,6 +7,7 @@ import org.springframework.util.Assert;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
+import pengliu.me.backend.demo.error.WikiException;
 import pengliu.me.backend.demo.wiki.WikiCategory;
 import pengliu.me.backend.demo.wiki.WikiCategoryRepository;
 
@@ -82,12 +83,12 @@ public class NavTreeService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteNavTreeNode(Long id) throws Exception {
+    public void deleteNavTreeNode(Long id) throws WikiException {
         Optional<NavTreeNode> node = navTreeRepository.findById(id);
         Assert.isTrue(node.isPresent(), String.format("待删除的节点不存在，其ID为： %s", id));
 
         if (node.get().getChildNodes().size() > 0 ) {
-            throw new Exception("不能删除一个非叶子节点！！");
+            throw new WikiException("不能删除一个非叶子节点！！");
         }
 
         navTreeRepository.deleteById(id);

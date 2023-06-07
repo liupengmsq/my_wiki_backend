@@ -3,9 +3,11 @@ package pengliu.me.backend.demo.nav;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import pengliu.me.backend.demo.ResponseDocument;
+import pengliu.me.backend.demo.error.WikiException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +21,6 @@ public class NavTreeController {
 
     @Autowired
     private ModelMapper modelMapper;
-
 
     /**
      * 获取树中所有节点的信息
@@ -76,6 +77,7 @@ public class NavTreeController {
      * @param node
      */
     @PostMapping("/nav/tree")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseDocument<NavTreeNodeDTO> createNavTreeNode(@RequestBody NavTreeNodeDTO node, @RequestParam("categoryId") Long categoryId) {
         Assert.hasText(node.getTarget(), "新建节点的目标URL不能为空！！");
         Assert.hasText(node.getTitle(), "新建节点的标题不能为空！！");
@@ -97,7 +99,8 @@ public class NavTreeController {
      * @throws Exception
      */
     @DeleteMapping("/nav/tree/{id}")
-    public ResponseDocument<?> deleteNavTreeNode(@PathVariable Long id) throws Exception {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseDocument<?> deleteNavTreeNode(@PathVariable Long id) throws WikiException {
         navTreeService.deleteNavTreeNode(id);
         return ResponseDocument.emptySuccessResponse();
     }
@@ -116,6 +119,7 @@ public class NavTreeController {
      * @param nodeToUpdate
      */
     @PutMapping("/nav/tree/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseDocument<?> updateNavTreeNode(@PathVariable Long id, @RequestBody NavTreeNodeDTO nodeToUpdate) {
         nodeToUpdate.setId(id);
         NavTreeNode navTreeNode = convertToEntity(nodeToUpdate);

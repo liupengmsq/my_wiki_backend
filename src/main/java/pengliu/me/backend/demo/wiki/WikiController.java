@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pengliu.me.backend.demo.ResponseDocument;
-import pengliu.me.backend.demo.WikiConfiguration;
+import pengliu.me.backend.demo.config.WikiConfiguration;
+import pengliu.me.backend.demo.error.WikiException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,16 +49,19 @@ public class WikiController {
     }
 
     @PostMapping("/wiki/category")
-    public ResponseDocument<WikiCategory> createWikiCategory(@RequestBody WikiCategory wikiCategory) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseDocument<WikiCategory> createWikiCategory(@RequestBody WikiCategory wikiCategory) throws WikiException {
         return ResponseDocument.successResponse(wikiService.createUpdateWikiCategory(wikiCategory));
     }
 
     @PutMapping("/wiki/category")
-    public ResponseDocument<WikiCategory> updateWikiCategory(@RequestBody WikiCategory wikiCategory) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseDocument<WikiCategory> updateWikiCategory(@RequestBody WikiCategory wikiCategory) throws WikiException {
         return ResponseDocument.successResponse(wikiService.createUpdateWikiCategory(wikiCategory));
     }
 
     @DeleteMapping("/wiki/category/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseDocument<?> deleteWikiCategoryById(@PathVariable Long id) {
         wikiService.deleteWikiCategoryById(id);
         return ResponseDocument.emptySuccessResponse();
@@ -102,17 +107,20 @@ public class WikiController {
     }
 
     @DeleteMapping("/wiki/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseDocument<?> deleteWikiPageById(@PathVariable Long id) {
         wikiService.deleteWikiById(id);
         return ResponseDocument.emptySuccessResponse();
     }
 
     @PostMapping("/wiki")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseDocument<WikiDTO> createWikiPage(@RequestBody WikiDTO wikiDTO) {
         return createUpdateWikiPage(wikiDTO);
     }
 
     @PutMapping("/wiki")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseDocument<WikiDTO> updateWikiPage(@RequestBody WikiDTO wikiDTO) {
         return createUpdateWikiPage(wikiDTO);
     }
@@ -130,14 +138,15 @@ public class WikiController {
         return ResponseDocument.successResponse(wikiService.getAllWikiImagesByFileName(fileName));
     }
 
-
     @PostMapping("/wiki/image")
-    public ResponseDocument<?> uploadImage(MultipartFile file) throws Exception {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseDocument<?> uploadImage(MultipartFile file) throws WikiException {
         return ResponseDocument.successResponse(wikiService.uploadWikiImage(file));
     }
 
     @DeleteMapping("/wiki/image/{fileName}")
-    public ResponseDocument<?> deleteImage(@PathVariable  String fileName) throws Exception {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseDocument<?> deleteImage(@PathVariable  String fileName) throws WikiException {
         wikiService.deleteWikiImage(fileName);
         return ResponseDocument.emptySuccessResponse();
     }

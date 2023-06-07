@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
-import pengliu.me.backend.demo.WikiConfiguration;
+import pengliu.me.backend.demo.config.WikiConfiguration;
+import pengliu.me.backend.demo.error.WikiException;
 import pengliu.me.backend.demo.util.DateTimeUtil;
 
 import java.io.IOException;
@@ -90,7 +91,7 @@ public class WikiService {
     }
 
     @Transactional(readOnly = false)
-    public WikiCategory createUpdateWikiCategory(WikiCategory wikiCategory) {
+    public WikiCategory createUpdateWikiCategory(WikiCategory wikiCategory) throws WikiException {
         List<WikiCategory> defaultCategory = wikiCategoryRepository.findByIsDefault(true);
         List<WikiCategory> blogCategory = wikiCategoryRepository.findByIsBlog(true);
         // 现存数据没有默认分类或blog分类，允许保存或更新
@@ -101,20 +102,20 @@ public class WikiService {
         if (defaultCategory.size() > 0 && wikiCategory.getDefault()) { // 已经存在默认分类，并且当要新建或更新也想成为默认分类时
             if (defaultCategory.get(0).getId().equals(wikiCategory.getId())) { // 如果要更新的就是已经存在的默认分类，允许更新
                 if (!wikiCategory.getActive()) {
-                    throw new RuntimeException("禁止将默认Wiki分类的条目失效！！");
+                    throw new WikiException("禁止将默认Wiki分类的条目失效！！");
                 }
             } else {
-                throw new RuntimeException("已经存在默认的Wiki分类！！");
+                throw new WikiException("已经存在默认的Wiki分类！！");
             }
         }
 
         if (blogCategory.size() > 0 && wikiCategory.getBlog()) { // 已经存在Blog分类，并且当要新建或更新也想成为Blog分类时
             if (blogCategory.get(0).getId().equals(wikiCategory.getId())) { // 如果要更新的就是已经存在的Blog分类，允许更新
                 if (!wikiCategory.getActive()) {
-                    throw new RuntimeException("禁止将Blog Wiki分类的条目失效！！");
+                    throw new WikiException("禁止将Blog Wiki分类的条目失效！！");
                 }
             } else {
-                throw new RuntimeException("已经存在Blog的Wiki分类！！");
+                throw new WikiException("已经存在Blog的Wiki分类！！");
             }
         }
         return wikiCategoryRepository.save(wikiCategory);
@@ -169,7 +170,7 @@ public class WikiService {
     }
 
     @Transactional(readOnly = false)
-    public String uploadWikiImage(MultipartFile file) throws Exception {
+    public String uploadWikiImage(MultipartFile file) throws WikiException {
         logger.info("The file is uploading to FTP server.");
         String uploadedFileName = uploadImageToFTPServer(file);
         logger.info("The file \"{}\" has been uploaded to FTP server.", uploadedFileName);
@@ -180,12 +181,12 @@ public class WikiService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteWikiImage(String fileName) throws Exception {
+    public void deleteWikiImage(String fileName) throws WikiException {
         wikiImageRepository.deleteByFileName(fileName);
         deleteImageFromFTPServer(fileName);
     }
 
-    private String uploadImageToFTPServer(MultipartFile file) throws Exception {
+    private String uploadImageToFTPServer(MultipartFile file) throws WikiException {
         //获取链接对象
         FTPClient ftpClient = new FTPClient();
         int reply;
@@ -202,7 +203,7 @@ public class WikiService {
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();
                 logger.error("连接ftp服务器失败!!");
-                throw new Exception("连接ftp服务器失败!!");
+                throw new WikiException("连接ftp服务器失败!!");
             }
             //获取字节流
             InputStream inputStream = file.getInputStream();
@@ -234,13 +235,13 @@ public class WikiService {
         }
         if (!uploadFileResult) {
             logger.error("上传文件失败!!");
-            throw new Exception("上传文件失败!!");
+            throw new WikiException("上传文件失败!!");
         } else {
             return uploadedFileName;
         }
     }
 
-    private void deleteImageFromFTPServer(String fileName) throws Exception {
+    private void deleteImageFromFTPServer(String fileName) throws WikiException {
         //获取链接对象
         FTPClient ftpClient = new FTPClient();
         int reply;
@@ -257,7 +258,7 @@ public class WikiService {
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();
                 logger.error("连接ftp服务器失败!!");
-                throw new Exception("连接ftp服务器失败!!");
+                throw new WikiException("连接ftp服务器失败!!");
             }
             //设置被动模式
             ftpClient.enterLocalPassiveMode();
@@ -281,7 +282,7 @@ public class WikiService {
         }
         if (!deleteFileResult) {
             logger.error("删除文件失败!!");
-            throw new Exception("删除文件失败!!");
+            throw new WikiException("删除文件失败!!");
         }
     }
 }
