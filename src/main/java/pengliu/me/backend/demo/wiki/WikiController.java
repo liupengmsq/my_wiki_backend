@@ -15,7 +15,6 @@ import pengliu.me.backend.demo.error.WikiException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class WikiController {

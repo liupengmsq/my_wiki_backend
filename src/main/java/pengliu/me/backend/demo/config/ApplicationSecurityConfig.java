@@ -14,10 +14,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pengliu.me.backend.demo.filter.JwtTokenVerifyFilter;
 import pengliu.me.backend.demo.handler.AccessDeniedHandlerImpl;
 import pengliu.me.backend.demo.handler.LoginFailHandlerImpl;
 import pengliu.me.backend.demo.security.ApplicationUserDetailService;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -50,6 +55,9 @@ public class ApplicationSecurityConfig {
         http
                 // 关闭csrf保护功能
                 .csrf().disable()
+                // 添加一个CorsFilter，它会使用我们的pengliu.me.backend.demo.config.CorsConfig配置的内容验证http request是否可以跨域
+                .cors()
+                .and()
                 // 不通过Session获取SecurityContext
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
