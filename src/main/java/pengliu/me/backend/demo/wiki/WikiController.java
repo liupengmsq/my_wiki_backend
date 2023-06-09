@@ -27,6 +27,13 @@ public class WikiController {
     @Autowired
     private ModelMapper modelMapper;
 
+    // 此接口用来验证是否有admin权限
+    @GetMapping("/hasAuthenticated")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseDocument<?> hasAuthenticated() {
+        return ResponseDocument.emptySuccessResponse();
+    }
+
     @GetMapping("/wiki/category")
     public ResponseDocument<List<WikiCategory>> getAllWikiCategories() {
         return ResponseDocument.successResponse(wikiService.getAllWikiCategories());
