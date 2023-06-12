@@ -64,7 +64,7 @@ CREATE TABLE `application_user` (
 -- 插入管理员用户信息
 INSERT INTO `application_user` (`account_expired`, `locked`, `credentials_expired`, `enabled`, `password`, `role`, `user_name`)
 VALUES
-	(0, 0, 0, 1, '$2a$10$wMnA5RmJrXA0s2SvSHkYv.o1d0a2BAZc4eb.aSY1r6aL/RPLW7tEKv', 'ADMIN', 'peng');
+	(0, 0, 0, 1, 'xxxxxxxx', 'ADMIN', 'peng');
 
 -- 插入首页blog的wiki分类
 INSERT INTO `wiki_category` (`category_name`, `created_datetime`, `updated_datetime`, `is_default`, `is_active`, `is_blog`)
