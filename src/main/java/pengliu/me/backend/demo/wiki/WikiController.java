@@ -144,6 +144,14 @@ public class WikiController {
         return ResponseDocument.successResponse(wikiService.getAllWikiImagesByFileName(fileName));
     }
 
+    @GetMapping("/wiki/image/pageable")
+    public ResponseDocument<Page<WikiImage>> getAllImages(@RequestParam Integer pageIndex,
+                                                          @RequestParam Integer size,
+                                                          @RequestParam(defaultValue = "") String fileName) {
+        return ResponseDocument.successResponse(wikiService.getAllWikiImagesByFileName(fileName,
+                PageRequest.of(pageIndex, size)));
+    }
+
     @PostMapping("/wiki/image")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseDocument<?> uploadImage(MultipartFile file) throws WikiException {

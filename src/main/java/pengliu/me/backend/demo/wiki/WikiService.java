@@ -169,6 +169,14 @@ public class WikiService {
         }
     }
 
+    public Page<WikiImage> getAllWikiImagesByFileName(String fileName, Pageable pageable) {
+        if (StringUtils.isEmpty(fileName)) {
+            return wikiImageRepository.findAll(pageable);
+        } else {
+            return wikiImageRepository.findByFileNameContaining(fileName, pageable);
+        }
+    }
+
     @Transactional(readOnly = false)
     public String uploadWikiImage(MultipartFile file) throws WikiException {
         logger.info("The file is uploading to FTP server.");
